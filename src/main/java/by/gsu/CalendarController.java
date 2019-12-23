@@ -25,6 +25,9 @@ import static java.time.Month.*;
 @Slf4j
 public class CalendarController implements Initializable {
 
+    private static final int WEEKS_COUNT = 6;
+    private static final int DAYS_COUNT = 7;
+
     @FXML
     private Label labelYear;
 
@@ -38,7 +41,7 @@ public class CalendarController implements Initializable {
     private ImageView januaryPane, februaryPane, marchPane, aprilPane, mayPane, junePane, julyPane, augustPane, septemberPane, octoberPane, novemberPane, decemberPane;
 
     private String selectedMonth;
-    private ArrayList<AnchorPaneNode> dateList = new ArrayList<>();
+    private ArrayList<AnchorPaneNode> dateNodes = new ArrayList<>();
     private Map<Month, ImageView> monthPanes;
 
     @Override
@@ -57,18 +60,31 @@ public class CalendarController implements Initializable {
         monthPanes.put(NOVEMBER, novemberPane);
         monthPanes.put(DECEMBER, decemberPane);
 
-        labelYear.setText(String.valueOf(LocalDate.now().getYear()));
         String currentMonth = String.valueOf(LocalDate.now().getMonth());
         labelMonth.setText(currentMonth);
+        selectedMonth = currentMonth;
+        labelYear.setText(String.valueOf(LocalDate.now().getYear()));
 
         activateMonthPane(LocalDate.now().getMonth());
-        //activateMonthPane(getCurrentMonth()); //get the current month and show only the navigation on it.
-        selectedMonth = currentMonth;
+        buildDateNodes();
 
-        //Add AnchorPane to GridView
-        for (int i = 0; i < 6; i++) { //Row has 6, means we only shows six weeks on calendar, change it to your needs.
-            for (int j = 0; j < 7; j++) { //Column has 7, for 7 days a week
-                //Layout of AnchorPane
+        populateDate(YearMonth.now());
+    }
+
+    private void activateMonthPane(Month currentMonth) {
+        monthPanes.keySet().forEach(month -> {
+            ImageView imageView = monthPanes.get(month);
+            imageView.setVisible(false);
+
+            if (month == currentMonth) {
+                imageView.setVisible(true);
+            }
+        });
+    }
+
+    private void buildDateNodes() {
+        for (int i = 0; i < WEEKS_COUNT; i++) {
+            for (int j = 0; j < DAYS_COUNT; j++) {
                 AnchorPaneNode anchorPane = new AnchorPaneNode();
                 anchorPane.setPrefSize(200, 200);
                 anchorPane.setPadding(new Insets(10));
@@ -77,16 +93,13 @@ public class CalendarController implements Initializable {
                 rippler.setRipplerFill(Paint.valueOf("#CCCCCC"));
                 gridPane.add(rippler, j, i);
 
-                dateList.add(anchorPane); //add the AnchorPane in a list
+                dateNodes.add(anchorPane);
             }
         }
-
-        populateDate(YearMonth.now());
-
     }
 
     /**
-     * Method that populate the date of moth in GridPane
+     * Method that populate the date of month in GridPane
      **/
     private void populateDate(YearMonth yearMonthNow) {
         YearMonth yearMonth = yearMonthNow;
@@ -97,7 +110,7 @@ public class CalendarController implements Initializable {
             calendarDate = calendarDate.minusDays(1);
         }
         // Populate the calendar with day numbers
-        for (AnchorPaneNode anchorPane : dateList) {
+        for (AnchorPaneNode anchorPane : dateNodes) {
             if (anchorPane.getChildren().size() != 0) {
                 anchorPane.getChildren().clear(); //remove the label in AnchorPane
             }
@@ -125,7 +138,7 @@ public class CalendarController implements Initializable {
             }
             anchorPane.setOnMouseClicked(event -> { //Handle click event of AnchorPane
                 System.out.println(anchorPane.getDate());
-                for (AnchorPaneNode anchorPaneNode : dateList) {
+                for (AnchorPaneNode anchorPaneNode : dateNodes) {
                     anchorPaneNode.getStyleClass().remove("selectedDate");
                 }
                 anchorPane.getStyleClass().add("selectedDate");
@@ -147,100 +160,64 @@ public class CalendarController implements Initializable {
         return (!currentDate.isBefore(start)) && (currentDate.isBefore(stop));
     }
 
-    /**
-     * Method that call the method populateDate(year, month) to change the calendar according to selected month and year
-     **/
-    private void changeCalendar(int year, String month) {
-        DateTimeFormatter formatter = new DateTimeFormatterBuilder()
-                .parseCaseInsensitive()
-                .appendPattern("yyyy MMMM")
-                .toFormatter(Locale.ENGLISH);
-        populateDate(YearMonth.parse(year + " " + month, formatter));
-        selectedMonth = month;
-    }
-
     @FXML
     private void onButtonJanuaryClicked(ActionEvent event) {
-        labelMonth.setText("JANUARY");
-        activateMonthPane(0);
-        changeCalendar(Integer.parseInt(labelYear.getText()), "January");
+        rebuildCalendar(JANUARY);
     }
 
     @FXML
     private void onButtonFebruaryClicked(ActionEvent event) {
-        labelMonth.setText("FEBRUARY");
-        activateMonthPane(1);
-        changeCalendar(Integer.parseInt(labelYear.getText()), "February");
+        rebuildCalendar(FEBRUARY);
     }
 
     @FXML
     private void onButtonMarchClicked(ActionEvent event) {
-        labelMonth.setText("MARCH");
-        activateMonthPane(2);
-        changeCalendar(Integer.parseInt(labelYear.getText()), "March");
+        rebuildCalendar(MARCH);
     }
 
     @FXML
     private void onButtonAprilClicked(ActionEvent event) {
-        labelMonth.setText("APRIL");
-        activateMonthPane(3);
-        changeCalendar(Integer.parseInt(labelYear.getText()), "April");
+        rebuildCalendar(APRIL);
     }
 
     @FXML
     private void onButtonMayClicked(ActionEvent event) {
-        labelMonth.setText("MAY");
-        activateMonthPane(4);
-        changeCalendar(Integer.parseInt(labelYear.getText()), "May");
+        rebuildCalendar(MAY);
     }
 
     @FXML
     private void onButtonJuneClicked(ActionEvent event) {
-        labelMonth.setText("JUNE");
-        activateMonthPane(5);
-        changeCalendar(Integer.parseInt(labelYear.getText()), "June");
+        rebuildCalendar(JUNE);
     }
 
     @FXML
     private void onButtonJulyClicked(ActionEvent event) {
-        labelMonth.setText("JULY");
-        activateMonthPane(6);
-        changeCalendar(Integer.parseInt(labelYear.getText()), "July");
+        rebuildCalendar(JULY);
     }
 
     @FXML
     private void onButtonAugustClicked(ActionEvent event) {
-        labelMonth.setText("AUGUST");
-        activateMonthPane(7);
-        changeCalendar(Integer.parseInt(labelYear.getText()), "August");
+        rebuildCalendar(AUGUST);
     }
 
     @FXML
     private void onButtonSeptemberClicked(ActionEvent event) {
-        labelMonth.setText("SEPTEMBER");
-        activateMonthPane(8);
-        changeCalendar(Integer.parseInt(labelYear.getText()), "September");
+        rebuildCalendar(SEPTEMBER);
     }
 
     @FXML
     private void onButtonOctoberClicked(ActionEvent event) {
-        labelMonth.setText("OCTOBER");
-        activateMonthPane(9);
-        changeCalendar(Integer.parseInt(labelYear.getText()), "October");
+        rebuildCalendar(OCTOBER);
     }
 
     @FXML
     private void onButtonNovemberClicked(ActionEvent event) {
-        labelMonth.setText("NOVEMBER");
-        activateMonthPane(10);
-        changeCalendar(Integer.parseInt(labelYear.getText()), "November");
+        rebuildCalendar(NOVEMBER);
     }
 
     @FXML
     private void onButtonDecemberClicked(ActionEvent event) {
-        labelMonth.setText("DECEMBER");
-        activateMonthPane(11);
-        changeCalendar(Integer.parseInt(labelYear.getText()), "December");
+        rebuildCalendar(DECEMBER);
     }
 
     @FXML
@@ -255,80 +232,23 @@ public class CalendarController implements Initializable {
         changeCalendar(Integer.parseInt(labelYear.getText()), selectedMonth);
     }
 
-    private int getCurrentMonth() {
-        LocalDate today = LocalDate.now();
-        return today.getMonthValue() - 1;
+    private void changeCalendar(int year, String month) {
+        DateTimeFormatter formatter = new DateTimeFormatterBuilder()
+                .parseCaseInsensitive()
+                .appendPattern("yyyy MMMM")
+                .toFormatter(Locale.ENGLISH);
+        populateDate(YearMonth.parse(year + " " + month, formatter));
+        selectedMonth = month;
     }
 
-    /**
-     * Method that hides/shows the navigation of selected month
-     **/
-    private void activateMonthPane(int month) {
-        januaryPane.setVisible(false);
-        februaryPane.setVisible(false);
-        marchPane.setVisible(false);
-        aprilPane.setVisible(false);
-        mayPane.setVisible(false);
-        junePane.setVisible(false);
-        julyPane.setVisible(false);
-        augustPane.setVisible(false);
-        septemberPane.setVisible(false);
-        octoberPane.setVisible(false);
-        novemberPane.setVisible(false);
-        decemberPane.setVisible(false);
+    private void rebuildCalendar(Month month) {
+        String monthName = month.name();
 
-        switch (month) {
-            case 0:
-                januaryPane.setVisible(true);
-                break;
-            case 1:
-                februaryPane.setVisible(true);
-                break;
-            case 2:
-                marchPane.setVisible(true);
-                break;
-            case 3:
-                aprilPane.setVisible(true);
-                break;
-            case 4:
-                mayPane.setVisible(true);
-                break;
-            case 5:
-                junePane.setVisible(true);
-                break;
-            case 6:
-                julyPane.setVisible(true);
-                break;
-            case 7:
-                augustPane.setVisible(true);
-                break;
-            case 8:
-                septemberPane.setVisible(true);
-                break;
-            case 9:
-                octoberPane.setVisible(true);
-                break;
-            case 10:
-                novemberPane.setVisible(true);
-                break;
-            case 11:
-                decemberPane.setVisible(true);
-                break;
-            default:
-                break;
-        }
-    }
+        labelMonth.setText(monthName);
+        activateMonthPane(JANUARY);
 
-    private void activateMonthPane(Month currentMonth) {
-        monthPanes.keySet().forEach(month -> {
-            ImageView imageView = monthPanes.get(month);
-            imageView.setVisible(false);
-
-            if (month == currentMonth) {
-                imageView.setVisible(true);
-            }
-        });
-
+        int year = Integer.parseInt(labelYear.getText());
+        changeCalendar(year, monthName);
     }
 
 }
