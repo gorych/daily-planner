@@ -14,7 +14,7 @@ import java.net.URL;
 public class Main extends Application {
 
     private static final String TITLE = "Daily planner";
-    private static final int DEFAULT_WIDTH = 650;
+    private static final int DEFAULT_WIDTH = 850;
     private static final int DEFAULT_HEIGHT = 568;
 
     public static void main(String[] args) {

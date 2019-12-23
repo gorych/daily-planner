@@ -8,11 +8,11 @@ import lombok.Setter;
 import java.time.LocalDate;
 
 @Getter @Setter
-public class AnchorPaneNode extends AnchorPane {
+public class CalendarCellNode extends AnchorPane {
 
     private LocalDate date;
 
-    public AnchorPaneNode(Node... children) {
+    public CalendarCellNode(Node... children) {
         super(children);
     }
 

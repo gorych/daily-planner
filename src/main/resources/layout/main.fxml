@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXCheckBox?>
+<?import com.jfoenix.controls.JFXListView?>
 <?import javafx.geometry.Insets?>
 <?import javafx.geometry.Rectangle2D?>
 <?import javafx.scene.Cursor?>
@@ -14,7 +16,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="568.0" prefWidth="650.0" style="-fx-background-color: #FFFFFF;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="by.gsu.CalendarController">
+<AnchorPane prefHeight="568.0" prefWidth="850.0" style="-fx-background-color: #FFFFFF;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="by.gsu.CalendarController">
    <children>
       <AnchorPane prefHeight="568.0" prefWidth="124.0" style="-fx-background-color: #4285f5;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
@@ -228,7 +230,7 @@
             </JFXButton>
          </children>
       </AnchorPane>
-      <Pane layoutX="124.0" prefHeight="55.0" prefWidth="526.0" style="-fx-border-color: #CCCCCC; -fx-border-width: 0 0 1 0;">
+      <Pane layoutX="124.0" prefHeight="55.0" prefWidth="726.0" style="-fx-border-color: #CCCCCC; -fx-border-width: 0 0 1 0;" AnchorPane.rightAnchor="0.0">
          <children>
             <Label fx:id="labelMonth" layoutX="25.0" layoutY="10.0" prefHeight="22.0" text="June," textFill="#1a08d4">
                <font>
@@ -504,5 +506,16 @@
             </Label>
          </children>
       </Pane>
+      <JFXListView layoutX="650.0" layoutY="55.0" prefHeight="534.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="650.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="55.0" />
+      <Label alignment="CENTER" layoutX="397.0" layoutY="78.0" prefHeight="24.0" prefWidth="194.0" text="Your notes" textAlignment="CENTER" textFill="#706f74" AnchorPane.leftAnchor="653.0" AnchorPane.rightAnchor="3.0">
+         <font>
+            <Font name="Franklin Gothic Medium" size="20.0" />
+         </font>
+      </Label>
+      <JFXCheckBox layoutX="673.0" layoutY="112.0" prefHeight="18.0" prefWidth="101.0" text="Read book" AnchorPane.leftAnchor="673.0" AnchorPane.topAnchor="112.0" />
+      <JFXCheckBox layoutX="673.0" layoutY="137.0" prefHeight="18.0" prefWidth="101.0" text="Play piano, 20:00" AnchorPane.leftAnchor="673.0" />
+      <JFXCheckBox layoutX="673.0" layoutY="164.0" prefHeight="18.0" prefWidth="101.0" text="Listen music" AnchorPane.leftAnchor="673.0" />
+      <JFXButton alignment="CENTER" layoutX="657.0" layoutY="494.0" prefHeight="30.0" prefWidth="187.0" style="-fx-background-color: #81c784;" text="Add new note" AnchorPane.bottomAnchor="14.0" AnchorPane.rightAnchor="6.0" />
+      <JFXButton alignment="CENTER" layoutX="657.0" layoutY="484.0" prefHeight="30.0" prefWidth="187.0" style="-fx-background-color: #f44336;" text="Delete selected" AnchorPane.bottomAnchor="54.0" AnchorPane.rightAnchor="6.0" />
    </children>
 </AnchorPane>
