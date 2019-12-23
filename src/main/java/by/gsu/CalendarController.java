@@ -222,14 +222,24 @@ public class CalendarController implements Initializable {
 
     @FXML
     private void onButtonLastYearClicked(ActionEvent event) {
-        labelYear.setText(String.valueOf(Integer.parseInt(labelYear.getText()) - 1));
-        changeCalendar(Integer.parseInt(labelYear.getText()), selectedMonth);
+        int previousYear = getPreviousYear();
+        labelYear.setText(String.valueOf(previousYear));
+        changeCalendar(previousYear, selectedMonth);
     }
 
     @FXML
     private void onButtonNextYearClicked(ActionEvent event) {
-        labelYear.setText(String.valueOf(Integer.parseInt(labelYear.getText()) + 1));
-        changeCalendar(Integer.parseInt(labelYear.getText()), selectedMonth);
+        int nextYear = getNextYear();
+        labelYear.setText(String.valueOf(nextYear));
+        changeCalendar(nextYear, selectedMonth);
+    }
+
+    private int getNextYear() {
+        return Integer.parseInt(labelYear.getText()) + 1;
+    }
+
+    private int getPreviousYear() {
+        return Integer.parseInt(labelYear.getText()) - 1;
     }
 
     private void changeCalendar(int year, String month) {
