@@ -1,6 +1,8 @@
 package by.gsu;
 
 import by.gsu.model.Note;
+import by.gsu.repository.ConnectionHolder;
+import by.gsu.repository.NoteRepository;
 import by.gsu.repository.impl.NoteRepositoryImpl;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -38,7 +40,12 @@ public class Main extends Application {
         primaryStage.getIcons().add(new Image(Main.class.getResourceAsStream("/images/icon.png")));
         primaryStage.show();
 
-        NoteRepositoryImpl noteRepository = new NoteRepositoryImpl();
+        NoteRepository noteRepository = new NoteRepositoryImpl();
         Optional<Note> byId = noteRepository.findById(1);
+    }
+
+    @Override
+    public void stop() {
+        ConnectionHolder.closeConnection();
     }
 }
