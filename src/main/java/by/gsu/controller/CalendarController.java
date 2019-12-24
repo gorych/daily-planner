@@ -1,9 +1,11 @@
 package by.gsu.controller;
 
 import by.gsu.model.CalendarCellNode;
+import by.gsu.model.Note;
 import by.gsu.repository.impl.NoteRepositoryImpl;
 import by.gsu.service.NoteService;
 import by.gsu.service.impl.NoteServiceImpl;
+import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXRippler;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -24,10 +26,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.YearMonth;
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 
 import static java.time.Month.*;
 
@@ -86,6 +85,9 @@ public class CalendarController implements Initializable {
     @FXML
     private ImageView decemberPane;
 
+    @FXML
+    private GridPane notesPane;
+
     private Month selectedMonth;
     private Map<Month, ImageView> monthPanes;
     private ArrayList<CalendarCellNode> calendarCellNodes;
@@ -121,6 +123,20 @@ public class CalendarController implements Initializable {
         buildCalenderCellNodes();
 
         drawCalenderCells(YearMonth.now());
+
+        List<Note> notes = noteService.getAll();
+        for (int i = 0; i < notes.size(); i++) {
+            Note note = notes.get(i);
+            JFXCheckBox noteCheckBox = new JFXCheckBox();
+            noteCheckBox.setText(note.getName());
+            noteCheckBox.setPadding(new Insets(0, 0, 5, 0));
+            notesPane.addRow(i + 1, noteCheckBox);
+        }
+
+        JFXCheckBox noteCheckBox = new JFXCheckBox();
+        noteCheckBox.setText("Complete this task");
+        noteCheckBox.setPadding(new Insets(0, 0, 5, 0));
+        notesPane.addRow(2, noteCheckBox);
     }
 
     private void activateMonthPane(Month currentMonth) {

@@ -507,11 +507,14 @@
       </Pane>
       <ScrollPane layoutX="647.0" layoutY="114.0" prefHeight="455.0" prefWidth="203.0">
         <content>
-          <AnchorPane fx:id="notesPane" minHeight="0.0" minWidth="0.0" prefHeight="453.0" prefWidth="200.0">
+            <GridPane fx:id="notesPane" minHeight="0.0" minWidth="0.0" prefHeight="453.0" prefWidth="200.0">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
-            </AnchorPane>
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
+            </GridPane>
         </content>
       </ScrollPane>
    </children>
