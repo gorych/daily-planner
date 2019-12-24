@@ -1,5 +1,7 @@
 package by.gsu;
 
+import by.gsu.model.Note;
+import by.gsu.repository.impl.NoteRepositoryImpl;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -9,6 +11,7 @@ import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.URL;
+import java.util.Optional;
 
 @Slf4j
 public class Main extends Application {
@@ -34,5 +37,8 @@ public class Main extends Application {
         primaryStage.setResizable(false);
         primaryStage.getIcons().add(new Image(Main.class.getResourceAsStream("/images/icon.png")));
         primaryStage.show();
+
+        NoteRepositoryImpl noteRepository = new NoteRepositoryImpl();
+        Optional<Note> byId = noteRepository.findById(1);
     }
 }

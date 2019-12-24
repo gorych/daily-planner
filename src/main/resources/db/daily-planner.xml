@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<configuration xmlns="http://www.jooq.org/xsd/jooq-codegen-3.12.0.xsd">
+    <jdbc>
+        <driver>org.sqlite.JDBC</driver>
+        <url>jdbc:sqlite:src\main\resources\db\daily-planner.db</url>
+    </jdbc>
+
+    <generator>
+        <name>org.jooq.codegen.JavaGenerator</name>
+
+        <database>
+            <name>org.jooq.meta.sqlite.SQLiteDatabase</name>
+            <includes>.*</includes>
+        </database>
+
+        <target>
+            <packageName>by.gsu.domain</packageName>
+            <directory>src\main\java</directory>
+        </target>
+    </generator>
+</configuration>
