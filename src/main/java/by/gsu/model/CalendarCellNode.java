@@ -1,4 +1,4 @@
-package by.gsu;
+package by.gsu.model;
 
 import javafx.scene.Node;
 import javafx.scene.layout.AnchorPane;

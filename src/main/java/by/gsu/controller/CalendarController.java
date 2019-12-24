@@ -1,10 +1,13 @@
-package by.gsu;
+package by.gsu.controller;
 
+import by.gsu.model.CalendarCellNode;
 import com.jfoenix.controls.JFXRippler;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -14,11 +17,10 @@ import javafx.scene.text.Font;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.URL;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.YearMonth;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
 import java.util.*;
 
 import static java.time.Month.*;
@@ -28,6 +30,10 @@ public class CalendarController implements Initializable {
 
     private static final int WEEKS_COUNT = 6;
     private static final int DAYS_COUNT = 7;
+
+    private static final String ANOTHER_MONTH_DAYS_CSS = "another-month-days";
+    private static final String SELECTED_DATE_CSS = "selected-date";
+    private static final String CURRENT_DATE_CSS = "current-date";
 
     @FXML
     private Label labelYear;
@@ -39,9 +45,42 @@ public class CalendarController implements Initializable {
     private GridPane gridPane;
 
     @FXML
-    private ImageView januaryPane, februaryPane, marchPane, aprilPane, mayPane, junePane, julyPane, augustPane, septemberPane, octoberPane, novemberPane, decemberPane;
+    private ImageView januaryPane;
 
-    private String selectedMonth;
+    @FXML
+    private ImageView februaryPane;
+
+    @FXML
+    private ImageView marchPane;
+
+    @FXML
+    private ImageView aprilPane;
+
+    @FXML
+    private ImageView mayPane;
+
+    @FXML
+    private ImageView junePane;
+
+    @FXML
+    private ImageView julyPane;
+
+    @FXML
+    private ImageView augustPane;
+
+    @FXML
+    private ImageView septemberPane;
+
+    @FXML
+    private ImageView octoberPane;
+
+    @FXML
+    private ImageView novemberPane;
+
+    @FXML
+    private ImageView decemberPane;
+
+    private Month selectedMonth;
     private ArrayList<CalendarCellNode> calendarCellNodes = new ArrayList<>();
     private Map<Month, ImageView> monthPanes;
 
@@ -61,9 +100,8 @@ public class CalendarController implements Initializable {
         monthPanes.put(NOVEMBER, novemberPane);
         monthPanes.put(DECEMBER, decemberPane);
 
-        String currentMonth = String.valueOf(LocalDate.now().getMonth());
-        labelMonth.setText(currentMonth);
-        selectedMonth = currentMonth;
+        selectedMonth = LocalDate.now().getMonth();
+        labelMonth.setText(selectedMonth.toString());
         labelYear.setText(String.valueOf(LocalDate.now().getYear()));
 
         activateMonthPane(LocalDate.now().getMonth());
@@ -75,11 +113,8 @@ public class CalendarController implements Initializable {
     private void activateMonthPane(Month currentMonth) {
         monthPanes.keySet().forEach(month -> {
             ImageView imageView = monthPanes.get(month);
-            imageView.setVisible(false);
-
-            if (month == currentMonth) {
-                imageView.setVisible(true);
-            }
+            boolean visibility = (month == currentMonth);
+            imageView.setVisible(visibility);
         });
     }
 
@@ -99,66 +134,80 @@ public class CalendarController implements Initializable {
         }
     }
 
-    private void drawCalenderCells(YearMonth currentYearMonth) {
-        // Get the date we want to start with on the calendar
-        LocalDate calendarDate = LocalDate.of(currentYearMonth.getYear(), currentYearMonth.getMonthValue(), 1);
+    private void drawCalenderCells(YearMonth yearMonth) {
+        int year = yearMonth.getYear();
+        int month = yearMonth.getMonthValue();
 
-        // Dial back the day until it is SUNDAY (unless the month starts on a sunday)
-        while (!calendarDate.getDayOfWeek().toString().equals("SUNDAY")) {
-            calendarDate = calendarDate.minusDays(1);
-        }
-
-        // Populate the calendar with day numbers
-        for (CalendarCellNode cellNode : calendarCellNodes) {
-            if (!cellNode.getChildren().isEmpty()) {
-                cellNode.getChildren().clear(); //remove the label in AnchorPane
+        LocalDate firstCellDate = getFirstCellDate(year, month);
+        for (CalendarCellNode cell : calendarCellNodes) {
+            ObservableList<Node> cellChildren = cell.getChildren();
+            if (!cellChildren.isEmpty()) {
+                cellChildren.clear();
             }
 
-            cellNode.setDate(calendarDate); //set date into AnchorPane
+            cell.setDate(firstCellDate);
 
-            Label cellLabel = new Label();
-            cellLabel.setText(String.valueOf(calendarDate.getDayOfMonth()));
-            cellLabel.setFont(Font.font("Roboto", 16)); //set the font of Text
-            cellLabel.getStyleClass().add("notInRangeDays");//TODO за рамками текущего месяца
+            Label dateLabel = buildDateLabel(yearMonth, firstCellDate, cell);
+            cellChildren.add(dateLabel);
 
-            if (isDateInRange(currentYearMonth, cellNode.getDate())) {
-                cellLabel.getStyleClass().remove("notInRangeDays");
-            }
-            if (cellNode.getDate().equals(LocalDate.of(currentYearMonth.getYear(), currentYearMonth.getMonth(), currentYearMonth.lengthOfMonth()))) {
-                cellLabel.getStyleClass().remove("notInRangeDays");
-            }
+            ObservableList<String> cellStyles = cell.getStyleClass();
+            cellStyles.remove(SELECTED_DATE_CSS);
+            cellStyles.remove(CURRENT_DATE_CSS);
 
-            AnchorPane.setTopAnchor(cellLabel, 5.0);
-            AnchorPane.setLeftAnchor(cellLabel, 5.0);
-
-            cellNode.getChildren().add(cellLabel);
-            cellNode.getStyleClass().remove("selectedDate"); //remove selection on date change
-            cellNode.getStyleClass().remove("dateNow"); //remove selection on current date
-
-            if (cellNode.getDate().equals(LocalDate.now())) { //if date is equal to current date now, then add a defualt color to pane
-                cellNode.getStyleClass().add("dateNow");
+            if (LocalDate.now().equals(cell.getDate())) {
+                cellStyles.add(CURRENT_DATE_CSS);
             }
 
-            cellNode.setOnMouseClicked(event -> {
-                for (CalendarCellNode calendarCellNode : calendarCellNodes) {
-                    calendarCellNode.getStyleClass().remove("selectedDate");
-                }
-                cellNode.getStyleClass().add("selectedDate");
+            cell.setOnMouseClicked(event -> {
+                unselectAllCells();
+                cellStyles.add(SELECTED_DATE_CSS);
             });
 
-            calendarDate = calendarDate.plusDays(1);
-
+            firstCellDate = firstCellDate.plusDays(1);
         }
     }
 
-    /**
-     * Method that return TRUE/FALSE if the specified date is in range of the current month
-     **/
-    private boolean isDateInRange(YearMonth yearMonth, LocalDate currentDate) {
-        LocalDate start = LocalDate.of(yearMonth.getYear(), yearMonth.getMonth(), 1);
-        LocalDate stop = LocalDate.of(yearMonth.getYear(), yearMonth.getMonth(), yearMonth.lengthOfMonth());
+    private void unselectAllCells() {
+        for (CalendarCellNode calendarCellNode : calendarCellNodes) {
+            calendarCellNode.getStyleClass().remove(SELECTED_DATE_CSS);
+        }
+    }
 
-        return (!currentDate.isBefore(start)) && (currentDate.isBefore(stop));
+    private Label buildDateLabel(YearMonth yearMonth, LocalDate firstCellDate, CalendarCellNode cell) {
+        Label dateLabel = new Label();
+        dateLabel.setText(String.valueOf(firstCellDate.getDayOfMonth()));
+        dateLabel.setFont(Font.font("Roboto", 16));
+
+        ObservableList<String> dateLabelStyles = dateLabel.getStyleClass();
+
+        if (!isCellDateWithinMonth(cell.getDate(), yearMonth)) {
+            dateLabelStyles.add(ANOTHER_MONTH_DAYS_CSS);
+        }
+
+        AnchorPane.setTopAnchor(dateLabel, 5.0);
+        AnchorPane.setLeftAnchor(dateLabel, 5.0);
+
+        return dateLabel;
+    }
+
+    private LocalDate getFirstCellDate(int year, int month) {
+        LocalDate firstCellDate = LocalDate.of(year, month, 1);
+        while (DayOfWeek.SUNDAY != firstCellDate.getDayOfWeek()) {
+            firstCellDate = firstCellDate.minusDays(1);
+        }
+        return firstCellDate;
+    }
+
+    private boolean isCellDateWithinMonth(LocalDate cellDate, YearMonth selectedYearMonth) {
+        int year = selectedYearMonth.getYear();
+        Month month = selectedYearMonth.getMonth();
+
+        LocalDate firstDayOfMonth = LocalDate.of(year, month, 1);
+        LocalDate lastDayOfMonth = LocalDate.of(year, month, selectedYearMonth.lengthOfMonth());
+
+        return cellDate.equals(firstDayOfMonth) ||
+                (cellDate.isAfter(firstDayOfMonth) && cellDate.isBefore(lastDayOfMonth)) ||
+                cellDate.equals(lastDayOfMonth);
     }
 
     @FXML
@@ -243,23 +292,18 @@ public class CalendarController implements Initializable {
         return Integer.parseInt(labelYear.getText()) - 1;
     }
 
-    private void changeCalendar(int year, String month) {
-        DateTimeFormatter formatter = new DateTimeFormatterBuilder()
-                .parseCaseInsensitive()
-                .appendPattern("yyyy MMMM")
-                .toFormatter(Locale.ENGLISH);
-        drawCalenderCells(YearMonth.parse(year + " " + month, formatter));
+    private void changeCalendar(int year, Month month) {
+        drawCalenderCells(YearMonth.of(year, month));
         selectedMonth = month;
     }
 
     private void rebuildCalendar(Month month) {
-        String monthName = month.name();
-
-        labelMonth.setText(monthName);
-        activateMonthPane(JANUARY);
+        activateMonthPane(month);
 
         int year = Integer.parseInt(labelYear.getText());
-        changeCalendar(year, monthName);
+        labelMonth.setText(month.name());
+
+        changeCalendar(year, month);
     }
 
 }
