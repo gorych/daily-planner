@@ -8,6 +8,7 @@ import org.jooq.SQLDialect;
 import org.jooq.impl.DSL;
 
 import java.sql.Connection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,10 +16,9 @@ import static by.gsu.domain.tables.Note.NOTE;
 
 public class NoteRepositoryImpl implements NoteRepository {
 
-
     @Override
     public List<Note> findAll() {
-        return null;
+        return Collections.singletonList(findById(1).get());
     }
 
     @Override
@@ -30,7 +30,7 @@ public class NoteRepositoryImpl implements NoteRepository {
                 .from(NOTE)
                 .where(NOTE.ID.eq(id))
                 .fetchOne()
-                .map(mapper -> new Note(mapper.get(NOTE.ID)));
+                .map(Note::new);
 
         return Optional.of(note);
     }

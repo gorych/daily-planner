@@ -1,6 +1,9 @@
 package by.gsu.controller;
 
 import by.gsu.model.CalendarCellNode;
+import by.gsu.repository.impl.NoteRepositoryImpl;
+import by.gsu.service.NoteService;
+import by.gsu.service.impl.NoteServiceImpl;
 import com.jfoenix.controls.JFXRippler;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -21,7 +24,10 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.YearMonth;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.Map;
+import java.util.ResourceBundle;
 
 import static java.time.Month.*;
 
@@ -81,8 +87,15 @@ public class CalendarController implements Initializable {
     private ImageView decemberPane;
 
     private Month selectedMonth;
-    private ArrayList<CalendarCellNode> calendarCellNodes = new ArrayList<>();
     private Map<Month, ImageView> monthPanes;
+    private ArrayList<CalendarCellNode> calendarCellNodes;
+
+    private NoteService noteService;
+
+    public CalendarController() {
+        this.calendarCellNodes = new ArrayList<>();
+        this.noteService = new NoteServiceImpl(new NoteRepositoryImpl());
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
