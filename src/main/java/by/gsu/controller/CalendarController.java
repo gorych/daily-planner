@@ -22,10 +22,7 @@ import javafx.scene.text.Font;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.URL;
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.Month;
-import java.time.YearMonth;
+import java.time.*;
 import java.util.*;
 
 import static java.time.Month.*;
@@ -124,19 +121,27 @@ public class CalendarController implements Initializable {
 
         drawCalenderCells(YearMonth.now());
 
-        List<Note> notes = noteService.getAll();
+        List<Note> notes = noteService.getSuitableByDateAndTime(LocalDateTime.now());
+        rebuildNotesPane(notes);
+    }
+
+    private void rebuildNotesPane(List<Note> notes) {
+        notesPane.getChildren().clear();
+        if (notes.isEmpty()) {
+            Label label = new Label();
+            label.setPadding(new Insets(0, 0, 5, 0));
+            label.setText("There are no notes on this date");
+            notesPane.addRow(1, label);
+            return;
+        }
+
         for (int i = 0; i < notes.size(); i++) {
             Note note = notes.get(i);
             JFXCheckBox noteCheckBox = new JFXCheckBox();
-            noteCheckBox.setText(note.getName());
+            noteCheckBox.setText(note.toString());
             noteCheckBox.setPadding(new Insets(0, 0, 5, 0));
-            notesPane.addRow(i + 1, noteCheckBox);
+            notesPane.addRow(i + 2, noteCheckBox);
         }
-
-        JFXCheckBox noteCheckBox = new JFXCheckBox();
-        noteCheckBox.setText("Complete this task");
-        noteCheckBox.setPadding(new Insets(0, 0, 5, 0));
-        notesPane.addRow(2, noteCheckBox);
     }
 
     private void activateMonthPane(Month currentMonth) {
@@ -190,6 +195,15 @@ public class CalendarController implements Initializable {
             cell.setOnMouseClicked(event -> {
                 unselectAllCells();
                 cellStyles.add(SELECTED_DATE_CSS);
+
+                List<Note> notes;
+                if (LocalDate.now().isEqual(cell.getDate())) {
+                    notes = noteService.getSuitableByDateAndTime(LocalDateTime.now());
+                } else {
+                    notes = noteService.getSuitableByDate(cell.getDate());
+                }
+
+                rebuildNotesPane(notes);
             });
 
             firstCellDate = firstCellDate.plusDays(1);
@@ -314,11 +328,15 @@ public class CalendarController implements Initializable {
     }
 
     private int getNextYear() {
-        return Integer.parseInt(labelYear.getText()) + 1;
+        return getYear() + 1;
     }
 
     private int getPreviousYear() {
-        return Integer.parseInt(labelYear.getText()) - 1;
+        return getYear() - 1;
+    }
+
+    private int getYear() {
+        return Integer.parseInt(labelYear.getText());
     }
 
     private void changeCalendar(int year, Month month) {
@@ -329,10 +347,8 @@ public class CalendarController implements Initializable {
     private void rebuildCalendar(Month month) {
         activateMonthPane(month);
 
-        int year = Integer.parseInt(labelYear.getText());
         labelMonth.setText(month.name());
-
-        changeCalendar(year, month);
+        changeCalendar(getYear(), month);
     }
 
 }

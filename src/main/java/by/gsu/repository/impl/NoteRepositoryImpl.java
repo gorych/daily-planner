@@ -64,11 +64,23 @@ public class NoteRepositoryImpl implements NoteRepository {
     }
 
     @Override
-    public List<Note> findByStartDateEqualOrAfterAndEndDateEqualOrBefore(LocalDateTime startDate, LocalDateTime endDate) {
+    public List<Note> findByStartDateLessOrEqualAndEndDateGreaterOrEqual(LocalDateTime date) {
         return DSL_CONTEXT.select()
                 .from(NOTE)
-                .where(NOTE.STARTDATE.greaterOrEqual(convertToBigDecimal(startDate))
-                        .and(NOTE.ENDDATE.lessOrEqual(convertToBigDecimal(endDate))))
+                .where(NOTE.STARTDATE.lessOrEqual(convertToBigDecimal(date))
+                        .and(NOTE.ENDDATE.greaterOrEqual(convertToBigDecimal(date))))
+                .fetch()
+                .map(Note::new);
+    }
+
+    @Override
+    public List<Note> findByLeftAndRightStartDates(LocalDateTime leftStartDate, LocalDateTime rightStartDate) {
+        return DSL_CONTEXT.select()
+                .from(NOTE)
+                .where(NOTE.STARTDATE.greaterOrEqual(convertToBigDecimal(leftStartDate))
+                        .and(NOTE.STARTDATE.lessOrEqual(convertToBigDecimal(rightStartDate)))
+                        .and(NOTE.ENDDATE.greaterOrEqual(convertToBigDecimal(leftStartDate)))
+                        )
                 .fetch()
                 .map(Note::new);
     }

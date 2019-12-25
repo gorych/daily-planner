@@ -16,7 +16,7 @@ public class Main extends Application {
 
     private static final String TITLE = "Daily planner";
     private static final int DEFAULT_WIDTH = 850;
-    private static final int DEFAULT_HEIGHT = 568;
+    private static final int DEFAULT_HEIGHT = 567;
 
     public static void main(String[] args) {
         launch(args);

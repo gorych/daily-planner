@@ -505,17 +505,41 @@
             </Label>
          </children>
       </Pane>
-      <ScrollPane layoutX="647.0" layoutY="114.0" prefHeight="455.0" prefWidth="203.0">
-        <content>
-            <GridPane fx:id="notesPane" minHeight="0.0" minWidth="0.0" prefHeight="453.0" prefWidth="200.0">
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-               <padding>
-                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-               </padding>
-            </GridPane>
-        </content>
-      </ScrollPane>
+      <AnchorPane layoutX="650.0" layoutY="106.0" prefHeight="455.0" prefWidth="203.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="650.0" AnchorPane.rightAnchor="0.0">
+         <children>
+            <ScrollPane prefHeight="455.0" prefWidth="203.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+              <content>
+                  <GridPane fx:id="notesPane" minHeight="0.0" minWidth="0.0" prefHeight="453.0" prefWidth="200.0">
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                     <columnConstraints>
+                        <ColumnConstraints />
+                        <ColumnConstraints />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints />
+                        <RowConstraints />
+                     </rowConstraints>
+                     <padding>
+                        <Insets bottom="5.0" left="5.0" top="5.0" />
+                     </padding>
+                     <children>
+                        <Label text="There are no notes on this date" textAlignment="CENTER" textFill="#b51b1b" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                           <font>
+                              <Font name="Franklin Gothic Medium" size="14.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </GridPane>
+              </content>
+            </ScrollPane>
+         </children>
+      </AnchorPane>
+      <Label layoutX="704.0" layoutY="82.0" text="Your notes" textFill="#1a1a1b">
+         <font>
+            <Font name="Franklin Gothic Medium" size="20.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

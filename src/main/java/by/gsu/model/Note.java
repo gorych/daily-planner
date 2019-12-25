@@ -6,6 +6,7 @@ import org.jooq.Record;
 import java.time.LocalDateTime;
 
 import static by.gsu.domain.tables.Note.NOTE;
+import static by.gsu.util.DateTimeUtil.HH_MM_FORMATTER;
 import static by.gsu.util.DateTimeUtil.YYYY_MM_DD_HH_MM_FORMATTER;
 
 @Data
@@ -25,4 +26,10 @@ public class Note {
         this.endDate = LocalDateTime.parse(record.get(NOTE.ENDDATE, String.class), YYYY_MM_DD_HH_MM_FORMATTER);
     }
 
+    @Override
+    public String toString() {
+        return startDate.format(HH_MM_FORMATTER) + "-" +
+                endDate.format(HH_MM_FORMATTER) + " " +
+                name;
+    }
 }
