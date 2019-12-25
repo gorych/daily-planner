@@ -15,11 +15,11 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="568.0" prefWidth="850.0" style="-fx-background-color: #FFFFFF;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="by.gsu.controller.CalendarController">
+<AnchorPane prefHeight="568.0" prefWidth="850.0" style="-fx-background-color: #fafafa;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="by.gsu.controller.CalendarController">
    <children>
-      <AnchorPane prefHeight="568.0" prefWidth="124.0" style="-fx-background-color: #4285f5;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <AnchorPane prefHeight="568.0" prefWidth="124.0" style="-fx-background-color: #e57373;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <AnchorPane layoutX="84.0" prefHeight="514.0" prefWidth="14.0" style="-fx-background-color: #4285f5;" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <AnchorPane layoutX="84.0" prefHeight="514.0" prefWidth="14.0" style="-fx-background-color: #e57373;" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
                   <Pane layoutX="1.0" layoutY="62.0" prefHeight="37.6" prefWidth="21.6" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
                      <children>
@@ -231,22 +231,22 @@
       </AnchorPane>
       <Pane layoutX="124.0" prefHeight="55.0" prefWidth="726.0" style="-fx-border-color: #CCCCCC; -fx-border-width: 0 0 1 0;" AnchorPane.rightAnchor="0.0">
          <children>
-            <Label fx:id="labelMonth" layoutX="25.0" layoutY="10.0" prefHeight="22.0" text="June," textFill="#1a08d4">
+            <Label fx:id="labelMonth" layoutX="14.0" layoutY="10.0" prefHeight="22.0" text="June," textFill="#4db6ac">
                <font>
                   <Font name="Franklin Gothic Medium" size="30.0" />
                </font>
             </Label>
-            <Label fx:id="labelYear" layoutX="403.0" layoutY="11.0" prefHeight="22.0" text="2018" textFill="#919192">
+            <Label fx:id="labelYear" layoutX="403.0" layoutY="11.0" prefHeight="22.0" text="2018" textFill="#616161">
                <font>
                   <Font name="HoloLens MDL2 Assets" size="30.0" />
                </font>
             </Label>
-            <JFXButton fx:id="btnNextYear" layoutX="487.0" layoutY="16.0" onAction="#onButtonNextYearClicked" prefHeight="25.0" prefWidth="25.0" style="-fx-border-radius: 4em; -fx-text-fill: #FFFFFF; -fx-background-radius: 4em; -fx-background-color: #CCCCCC;" text="&gt;">
+            <JFXButton fx:id="btnNextYear" layoutX="487.0" layoutY="16.0" onAction="#onButtonNextYearClicked" prefHeight="25.0" prefWidth="25.0" style="-fx-border-radius: 4em; -fx-text-fill: #FFFFFF; -fx-background-radius: 4em; -fx-background-color: #4db6ac;" text="&gt;">
                <font>
                   <Font name="Arial Black" size="12.0" />
                </font>
             </JFXButton>
-            <JFXButton fx:id="btnLastYear" layoutX="359.0" layoutY="16.0" onAction="#onButtonLastYearClicked" prefHeight="25.0" prefWidth="25.0" style="-fx-border-radius: 4em; -fx-text-fill: #FFFFFF; -fx-background-radius: 4em; -fx-background-color: #CCCCCC;" text="&lt;">
+            <JFXButton fx:id="btnLastYear" layoutX="359.0" layoutY="16.0" onAction="#onButtonLastYearClicked" prefHeight="25.0" prefWidth="25.0" style="-fx-border-radius: 4em; -fx-text-fill: #FFFFFF; -fx-background-radius: 4em; -fx-background-color: #4db6ac;" text="&lt;">
                <font>
                   <Font name="Arial Black" size="12.0" />
                </font>
@@ -468,78 +468,89 @@
                   </GridPane>
                </children>
             </AnchorPane>
-            <Label layoutX="27.0" layoutY="25.0" text="Sun" textFill="#ff6262">
+            <Label layoutX="27.0" layoutY="25.0" text="Sun" textFill="#ef5350">
                <font>
                   <Font name="Franklin Gothic Medium" size="20.0" />
                </font>
             </Label>
-            <Label layoutX="97.0" layoutY="25.0" text="Mon" textFill="#706f74">
+            <Label layoutX="97.0" layoutY="25.0" text="Mon" textFill="#616161">
                <font>
                   <Font name="Franklin Gothic Medium" size="20.0" />
                </font>
             </Label>
-            <Label layoutX="173.0" layoutY="25.0" text="Tue" textFill="#706f74">
+            <Label layoutX="173.0" layoutY="25.0" text="Tue" textFill="#616161">
                <font>
                   <Font name="Franklin Gothic Medium" size="20.0" />
                </font>
             </Label>
-            <Label layoutX="244.0" layoutY="25.0" text="Wed" textFill="#706f74">
+            <Label layoutX="244.0" layoutY="25.0" text="Wed" textFill="#616161">
                <font>
                   <Font name="Franklin Gothic Medium" size="20.0" />
                </font>
             </Label>
-            <Label layoutX="323.0" layoutY="25.0" text="Thu" textFill="#706f74">
+            <Label layoutX="323.0" layoutY="25.0" text="Thu" textFill="#616161">
                <font>
                   <Font name="Franklin Gothic Medium" size="20.0" />
                </font>
             </Label>
-            <Label layoutX="397.0" layoutY="25.0" text="Fri" textFill="#706f74">
+            <Label layoutX="397.0" layoutY="25.0" text="Fri" textFill="#616161">
                <font>
                   <Font name="Franklin Gothic Medium" size="20.0" />
                </font>
             </Label>
-            <Label layoutX="471.0" layoutY="25.0" text="Sat" textFill="#7f6ad5">
+            <Label layoutX="471.0" layoutY="25.0" text="Sat" textFill="#9575cd">
                <font>
                   <Font name="Franklin Gothic Medium" size="20.0" />
                </font>
             </Label>
          </children>
       </Pane>
-      <AnchorPane layoutX="650.0" layoutY="106.0" prefHeight="455.0" prefWidth="203.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="650.0" AnchorPane.rightAnchor="0.0">
+      <AnchorPane layoutX="650.0" layoutY="106.0" prefHeight="373.0" prefWidth="200.0" style="-fx-background-color: #fafafa;" AnchorPane.bottomAnchor="82.0" AnchorPane.leftAnchor="650.0" AnchorPane.rightAnchor="0.0">
          <children>
-            <ScrollPane prefHeight="455.0" prefWidth="203.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <ScrollPane prefHeight="367.0" prefWidth="200.0" AnchorPane.bottomAnchor="6.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
               <content>
-                  <GridPane fx:id="notesPane" minHeight="0.0" minWidth="0.0" prefHeight="453.0" prefWidth="200.0">
+                  <GridPane fx:id="notesPane" minHeight="0.0" minWidth="0.0" prefHeight="365.0" prefWidth="200.0" style="-fx-border-width: #fafafa;">
                      <opaqueInsets>
                         <Insets />
                      </opaqueInsets>
                      <columnConstraints>
                         <ColumnConstraints />
                         <ColumnConstraints />
+                        <ColumnConstraints />
+                        <ColumnConstraints />
+                        <ColumnConstraints />
+                        <ColumnConstraints />
                      </columnConstraints>
                      <rowConstraints>
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
                         <RowConstraints />
                         <RowConstraints />
                      </rowConstraints>
                      <padding>
                         <Insets bottom="5.0" left="5.0" top="5.0" />
                      </padding>
-                     <children>
-                        <Label text="There are no notes on this date" textAlignment="CENTER" textFill="#b51b1b" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                           <font>
-                              <Font name="Franklin Gothic Medium" size="14.0" />
-                           </font>
-                        </Label>
-                     </children>
                   </GridPane>
               </content>
             </ScrollPane>
          </children>
       </AnchorPane>
-      <Label layoutX="704.0" layoutY="82.0" text="Your notes" textFill="#1a1a1b">
+      <Label layoutX="704.0" layoutY="82.0" text="Your notes" textFill="#616161" AnchorPane.topAnchor="87.0">
          <font>
             <Font name="Franklin Gothic Medium" size="20.0" />
          </font>
       </Label>
+      <JFXButton alignment="CENTER" buttonType="RAISED" layoutX="654.0" layoutY="537.0" prefHeight="32.0" prefWidth="191.0" style="-fx-background-color: #e57373;" text="Delete selected notes" textAlignment="CENTER" textFill="WHITE" AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="654.0" AnchorPane.rightAnchor="5.0">
+         <padding>
+            <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
+         </padding>
+      </JFXButton>
+      <JFXButton alignment="CENTER" buttonType="RAISED" layoutX="654.0" layoutY="491.0" prefHeight="32.0" prefWidth="191.0" style="-fx-background-color: #4db6ac;" text="Add new note" textAlignment="CENTER" textFill="WHITE" AnchorPane.bottomAnchor="45.0" AnchorPane.leftAnchor="654.0" AnchorPane.rightAnchor="5.0">
+         <padding>
+            <Insets bottom="5.0" left="10.0" right="10.0" top="5.0" />
+         </padding>
+      </JFXButton>
    </children>
 </AnchorPane>

@@ -3,9 +3,13 @@
 }
 
 .selected-date {
-    -fx-background-color: #a181f9;
+    -fx-background-color: #bdbdbd;
 }
 
 .current-date {
-    -fx-background-color: #4285f5
+    -fx-background-color: #4db6ac
+}
+
+.checked {
+    -jfx-checked-color: #9e9e9e
 }

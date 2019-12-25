@@ -36,6 +36,7 @@ public class CalendarController implements Initializable {
     private static final String ANOTHER_MONTH_DAYS_CSS = "another-month-days";
     private static final String SELECTED_DATE_CSS = "selected-date";
     private static final String CURRENT_DATE_CSS = "current-date";
+    private static final String CHECKED_CSS = "checked";
 
     @FXML
     private Label labelYear;
@@ -131,6 +132,7 @@ public class CalendarController implements Initializable {
             Label label = new Label();
             label.setPadding(new Insets(0, 0, 5, 0));
             label.setText("There are no notes on this date");
+            label.setTextFill(Paint.valueOf("#d32f2f"));
             notesPane.addRow(1, label);
             return;
         }
@@ -139,6 +141,8 @@ public class CalendarController implements Initializable {
             Note note = notes.get(i);
             JFXCheckBox noteCheckBox = new JFXCheckBox();
             noteCheckBox.setText(note.toString());
+            noteCheckBox.getStyleClass().add(CHECKED_CSS);
+            noteCheckBox.setTextFill(Paint.valueOf("#212121"));
             noteCheckBox.setPadding(new Insets(0, 0, 5, 0));
             notesPane.addRow(i + 2, noteCheckBox);
         }
