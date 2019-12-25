@@ -1,5 +1,6 @@
 package by.gsu.repository.impl;
 
+import by.gsu.domain.tables.records.NoteRecord;
 import by.gsu.model.Note;
 import by.gsu.repository.ConnectionHolder;
 import by.gsu.repository.NoteRepository;
@@ -7,26 +8,28 @@ import org.jooq.DSLContext;
 import org.jooq.SQLDialect;
 import org.jooq.impl.DSL;
 
-import java.sql.Connection;
-import java.util.Collections;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 import static by.gsu.domain.tables.Note.NOTE;
+import static by.gsu.util.DateTimeUtil.convertToBigDecimal;
 
 public class NoteRepositoryImpl implements NoteRepository {
 
+    private static final DSLContext DSL_CONTEXT = DSL.using(ConnectionHolder.getConnection(), SQLDialect.SQLITE);
+
     @Override
     public List<Note> findAll() {
-        return Collections.singletonList(findById(1).get());
+        return DSL_CONTEXT.select()
+                .from(NOTE)
+                .fetch()
+                .map(Note::new);
     }
 
     @Override
     public Optional<Note> findById(int id) {
-        Connection connection = ConnectionHolder.getConnection();
-        DSLContext create = DSL.using(connection, SQLDialect.SQLITE);
-
-        Note note = create.select()
+        Note note = DSL_CONTEXT.select()
                 .from(NOTE)
                 .where(NOTE.ID.eq(id))
                 .fetchOne()
@@ -37,16 +40,37 @@ public class NoteRepositoryImpl implements NoteRepository {
 
     @Override
     public void add(Note note) {
-
+        NoteRecord noteRecord = DSL_CONTEXT.newRecord(NOTE);
+        saveOrUpdate(note, noteRecord);
     }
 
     @Override
     public void update(Note note) {
+        NoteRecord noteRecord = DSL_CONTEXT.fetchOne(NOTE, NOTE.ID.eq(note.getId()));
+        saveOrUpdate(note, noteRecord);
+    }
 
+    private void saveOrUpdate(Note note, NoteRecord noteRecord) {
+        noteRecord.setName(note.getName());
+        noteRecord.setDescription(note.getDescription());
+        noteRecord.setStartdate(convertToBigDecimal(note.getStartDate()));
+        noteRecord.setEnddate(convertToBigDecimal(note.getEndDate()));
+        noteRecord.store();
     }
 
     @Override
     public void delete(Note note) {
-
+        DSL_CONTEXT.delete(NOTE).where(NOTE.ID.eq(note.getId()));
     }
+
+    @Override
+    public List<Note> findByStartDateEqualOrAfterAndEndDateEqualOrBefore(LocalDateTime startDate, LocalDateTime endDate) {
+        return DSL_CONTEXT.select()
+                .from(NOTE)
+                .where(NOTE.STARTDATE.greaterOrEqual(convertToBigDecimal(startDate))
+                        .and(NOTE.ENDDATE.lessOrEqual(convertToBigDecimal(endDate))))
+                .fetch()
+                .map(Note::new);
+    }
+
 }

@@ -8,6 +8,7 @@ import by.gsu.domain.DefaultSchema;
 import by.gsu.domain.Keys;
 import by.gsu.domain.tables.records.NoteRecord;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
@@ -39,7 +40,7 @@ import org.jooq.impl.TableImpl;
 @SuppressWarnings({ "all", "unchecked", "rawtypes" })
 public class Note extends TableImpl<NoteRecord> {
 
-    private static final long serialVersionUID = -2077802466;
+    private static final long serialVersionUID = 500608823;
 
     /**
      * The reference instance of <code>note</code>
@@ -65,19 +66,19 @@ public class Note extends TableImpl<NoteRecord> {
     public final TableField<NoteRecord, String> NAME = createField("name", org.jooq.impl.SQLDataType.CLOB.nullable(false), this, "");
 
     /**
-     * The column <code>note.shortDescription</code>.
+     * The column <code>note.description</code>.
      */
-    public final TableField<NoteRecord, String> SHORTDESCRIPTION = createField("shortDescription", org.jooq.impl.SQLDataType.CLOB.nullable(false), this, "");
+    public final TableField<NoteRecord, String> DESCRIPTION = createField("description", org.jooq.impl.SQLDataType.CLOB.nullable(false), this, "");
 
     /**
      * The column <code>note.startDate</code>.
      */
-    public final TableField<NoteRecord, String> STARTDATE = createField("startDate", org.jooq.impl.SQLDataType.CLOB.nullable(false), this, "");
+    public final TableField<NoteRecord, BigDecimal> STARTDATE = createField("startDate", org.jooq.impl.SQLDataType.NUMERIC.nullable(false), this, "");
 
     /**
      * The column <code>note.endDate</code>.
      */
-    public final TableField<NoteRecord, String> ENDDATE = createField("endDate", org.jooq.impl.SQLDataType.CLOB.nullable(false), this, "");
+    public final TableField<NoteRecord, BigDecimal> ENDDATE = createField("endDate", org.jooq.impl.SQLDataType.NUMERIC.nullable(false), this, "");
 
     /**
      * Create a <code>note</code> table reference

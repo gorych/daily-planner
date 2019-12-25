@@ -20,9 +20,9 @@ public class Note {
     public Note(Record record) {
         this.id = record.get(NOTE.ID);
         this.name = record.get(NOTE.NAME);
-        this.description = record.get(NOTE.SHORTDESCRIPTION);
-        this.startDate = LocalDateTime.parse(record.get(NOTE.STARTDATE), YYYY_MM_DD_HH_MM_FORMATTER);
-        this.endDate = LocalDateTime.parse(record.get(NOTE.ENDDATE), YYYY_MM_DD_HH_MM_FORMATTER);
+        this.description = record.get(NOTE.DESCRIPTION);
+        this.startDate = LocalDateTime.parse(record.get(NOTE.STARTDATE, String.class), YYYY_MM_DD_HH_MM_FORMATTER);
+        this.endDate = LocalDateTime.parse(record.get(NOTE.ENDDATE, String.class), YYYY_MM_DD_HH_MM_FORMATTER);
     }
 
 }
