@@ -1,27 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.JFXButton?>
-<?import com.jfoenix.controls.JFXDialog?>
-<?import com.jfoenix.controls.JFXDialogLayout?>
-<?import javafx.scene.control.Label?>
+<?import com.jfoenix.controls.*?>
+<?import com.jfoenix.validation.RequiredFieldValidator?>
 <?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 
-<StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="by.gsu.controller.AddNoteController">
-    <JFXDialog fx:id="dialog">
-        <JFXDialogLayout>
-            <heading>
-                <Label>Delete selected notes</Label>
-            </heading>
-            <body>
-                <Label>
-                   Are you sure you want to delete selected notes?
-                </Label>
-            </body>
-            <actions>
-                <JFXButton fx:id="acceptButton" styleClass="dialog-yes">YES</JFXButton>
-                <JFXButton fx:id="cancelButton" styleClass="dialog-no">NO</JFXButton>
-            </actions>
-        </JFXDialogLayout>
-    </JFXDialog>
+<?import javafx.scene.layout.HBox?>
+<StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="by.gsu.controller.AddNewNoteDialogController">
 
+    <VBox spacing="30" alignment="CENTER" maxWidth="400" minWidth="400">
+        <children>
+            <JFXTextField fx:id="noteName" promptText="Note name">
+                <validators>
+                    <RequiredFieldValidator message="Note name is required field!"/>
+                </validators>
+            </JFXTextField>
+            <JFXTextField fx:id="noteDescription" promptText="Note description">
+                <validators>
+                    <RequiredFieldValidator message="Note description is required field!"/>
+                </validators>
+            </JFXTextField>
+            <HBox alignment="CENTER">
+                <JFXDatePicker fx:id="noteStartDate" overLay="false" promptText="Start date" minWidth="200" maxWidth="200">
+                    <validators>
+                        <RequiredFieldValidator message="Start date is required field!"/>
+                    </validators>
+                </JFXDatePicker>
+                <JFXTimePicker fx:id="noteStartTime" overLay="false" promptText="Start time" minWidth="200" maxWidth="200">
+                    <validators>
+                        <RequiredFieldValidator message="Start time is required field!"/>
+                    </validators>
+                </JFXTimePicker>
+            </HBox>
+            <HBox alignment="CENTER">
+                <JFXDatePicker fx:id="noteEndDate" overLay="false" promptText="End date" minWidth="200" maxWidth="200">
+                    <validators>
+                        <RequiredFieldValidator message="End date is required field!"/>
+                    </validators>
+                </JFXDatePicker>
+                <JFXTimePicker fx:id="noteEndTime" overLay="false" promptText="End time" minWidth="200" maxWidth="200">
+                    <validators>
+                        <RequiredFieldValidator message="End time is required field!"/>
+                    </validators>
+                </JFXTimePicker>
+            </HBox>
+        </children>
+    </VBox>
 </StackPane>

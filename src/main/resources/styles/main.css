@@ -25,3 +25,9 @@
     -fx-background-color: #e57373;
     -fx-text-fill: white;
 }
+
+.raised-grey-btn {
+    -jfx-button-type: RAISED;
+    -fx-background-color: #bdbdbd;
+    -fx-text-fill: white;
+}

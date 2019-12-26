@@ -8,11 +8,11 @@ import java.util.List;
 
 public interface NoteService {
 
-    List<Note> getAll();
-
     List<Note> getSuitableByDateAndTimeAndSortedByStartDate(LocalDateTime dateTime);
 
     List<Note> getSuitableByDateAndSortedByStartDate(LocalDate date);
+
+    void add(Note note);
 
     void delete(List<Note> notes);
 

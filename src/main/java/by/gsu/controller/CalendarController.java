@@ -16,13 +16,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -49,6 +48,9 @@ public class CalendarController implements Initializable {
 
     private static final String DELETE_DIALOG_TITLE = "Delete selected notes";
     private static final String DELETE_DIALOG_BODY = "Are you sure you want to delete selected notes?";
+    private static final String WARNING_DIALOG_TITLE = "Warning";
+    private static final String WARNING_DIALOG_BODY = "There are no selected notes to delete";
+    private static final String ADD_NEW_NOTE_DIALOG_TITLE = "Add new note";
 
     @FXML
     private AnchorPane root;
@@ -363,7 +365,7 @@ public class CalendarController implements Initializable {
 
         if (selectedCheckBoxes.isEmpty()) {
             JFXAlert<String> warningDialog = DialogUtil
-                    .buildInfoDialog(stage, "Warning", "There are no selected notes to delete");
+                    .buildInfoDialog(stage, WARNING_DIALOG_TITLE, WARNING_DIALOG_BODY);
             warningDialog.show();
             return;
         }
@@ -387,16 +389,26 @@ public class CalendarController implements Initializable {
 
     @FXML
     public void onButtonAddNewNoteClicked(ActionEvent actionEvent) throws IOException {
-        Parent mainLayout = FXMLLoader.load(getClass().getResource("/layout/add-note-dialog.fxml"));
+        Stage stage = (Stage) (root.getScene().getWindow());
 
-        Scene scene = new Scene(mainLayout);
-        URL resource = getClass().getResource("/styles/main.css");
-        scene.getStylesheets().add(String.valueOf(resource));
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        StackPane addNoteDialogBody = fxmlLoader.load(getClass().getResource("/layout/add-note-dialog.fxml").openStream());
+        AddNewNoteDialogController addNoteController = fxmlLoader.getController();
 
-        Stage stage = new Stage();
-        stage.setScene(scene);
-        stage.show();
+        JFXAlert<String> alert = DialogUtil
+                .buildAddCancelModalDialog(
+                        stage,
+                        ADD_NEW_NOTE_DIALOG_TITLE,
+                        addNoteDialogBody,
+                        () -> {
+                            addNoteController.saveNewNote();
+                            addNoteController.cleanFieldValues();
+                            rebuildNotesPane(LocalDate.of(getSelectedYear(), selectedMonth, selectedMonth.maxLength()));
+                        },
+                        addNoteController::cleanFieldValues);
+        alert.show();
     }
+
 
     private int getNextYear() {
         return getSelectedYear() + 1;
