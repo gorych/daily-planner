@@ -5,22 +5,28 @@ import by.gsu.model.Note;
 import by.gsu.repository.impl.NoteRepositoryImpl;
 import by.gsu.service.NoteService;
 import by.gsu.service.impl.NoteServiceImpl;
-import com.jfoenix.controls.JFXCheckBox;
-import com.jfoenix.controls.JFXRippler;
+import com.jfoenix.controls.*;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
 
+import java.io.IOException;
 import java.net.URL;
 import java.time.*;
 import java.util.*;
@@ -37,6 +43,9 @@ public class CalendarController implements Initializable {
     private static final String SELECTED_DATE_CSS = "selected-date";
     private static final String CURRENT_DATE_CSS = "current-date";
     private static final String CHECKED_CSS = "checked";
+
+    @FXML
+    private AnchorPane root;
 
     @FXML
     private Label labelYear;
@@ -133,6 +142,7 @@ public class CalendarController implements Initializable {
             label.setPadding(new Insets(0, 0, 5, 0));
             label.setText("There are no notes on this date");
             label.setTextFill(Paint.valueOf("#d32f2f"));
+            label.setFont(new Font(14));
             notesPane.addRow(1, label);
             return;
         }
@@ -329,6 +339,43 @@ public class CalendarController implements Initializable {
         int nextYear = getNextYear();
         labelYear.setText(String.valueOf(nextYear));
         changeCalendar(nextYear, selectedMonth);
+    }
+
+    @FXML
+    public void onButtonDeleteSelectedNotesClicked(ActionEvent actionEvent) {
+        JFXAlert alert = new JFXAlert((Stage) root.getScene().getWindow());
+        alert.initModality(Modality.APPLICATION_MODAL);
+        alert.setOverlayClose(false);
+
+        JFXButton yesButton = new JFXButton("YES");
+        ObservableList<String> yesButtonStyles = yesButton.getStyleClass();
+        yesButtonStyles.add("raised-green-btn");
+        yesButton.setOnAction(event -> alert.hideWithAnimation());
+
+        JFXButton noButton = new JFXButton("NO");
+        noButton.getStyleClass().add("raised-red-btn");
+        noButton.setOnAction(event -> alert.hideWithAnimation());
+
+        JFXDialogLayout layout = new JFXDialogLayout();
+        layout.setHeading(new Label("Delete selected notes"));
+        layout.setBody(new Label("Are you sure you want to delete selected notes?"));
+        layout.setActions(yesButton, noButton);
+
+        alert.setContent(layout);
+        alert.show();
+    }
+
+    @FXML
+    public void onButtonAddNewNoteClicked(ActionEvent actionEvent) throws IOException {
+        Parent mainLayout = FXMLLoader.load(getClass().getResource("/layout/add-note-dialog.fxml"));
+
+        Scene scene = new Scene(mainLayout);
+        URL resource = getClass().getResource("/styles/main.css");
+        scene.getStylesheets().add(String.valueOf(resource));
+
+        Stage stage = new Stage();
+        stage.setScene(scene);
+        stage.show();
     }
 
     private int getNextYear() {

@@ -13,3 +13,15 @@
 .checked {
     -jfx-checked-color: #9e9e9e
 }
+
+.raised-green-btn {
+    -jfx-button-type: RAISED;
+    -fx-background-color: #4db6ac;
+    -fx-text-fill: white;
+}
+
+.raised-red-btn {
+    -jfx-button-type: RAISED;
+    -fx-background-color: #e57373;
+    -fx-text-fill: white;
+}

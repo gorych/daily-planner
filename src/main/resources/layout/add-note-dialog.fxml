@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXDialog?>
+<?import com.jfoenix.controls.JFXDialogLayout?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.StackPane?>
+
+<StackPane fx:id="root" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="by.gsu.controller.AddNoteController">
+    <JFXDialog fx:id="dialog">
+        <JFXDialogLayout>
+            <heading>
+                <Label>Delete selected notes</Label>
+            </heading>
+            <body>
+                <Label>
+                   Are you sure you want to delete selected notes?
+                </Label>
+            </body>
+            <actions>
+                <JFXButton fx:id="acceptButton" styleClass="dialog-yes">YES</JFXButton>
+                <JFXButton fx:id="cancelButton" styleClass="dialog-no">NO</JFXButton>
+            </actions>
+        </JFXDialogLayout>
+    </JFXDialog>
+
+</StackPane>
