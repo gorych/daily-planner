@@ -32,4 +32,9 @@ public class NoteServiceImpl implements NoteService {
         return noteRepository.findByLeftAndRightStartDates(leftStartDate, rightStartDate);
     }
 
+    @Override
+    public void delete(List<Note> notes) {
+        noteRepository.delete(notes);
+    }
+
 }

@@ -14,4 +14,6 @@ public interface NoteService {
 
     List<Note> getSuitableByDate(LocalDate date);
 
+    void delete(List<Note> notes);
+
 }

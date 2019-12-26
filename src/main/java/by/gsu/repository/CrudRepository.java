@@ -9,10 +9,12 @@ public interface CrudRepository<T> {
 
     Optional<T> findById(int id);
 
-    void add(T note);
+    void add(T entity);
 
-    void update(T note);
+    void update(T entity);
 
-    void delete(T note);
+    void delete(T entity);
+
+    void delete(List<T> entities);
 
 }

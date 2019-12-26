@@ -5,7 +5,10 @@ import by.gsu.model.Note;
 import by.gsu.repository.impl.NoteRepositoryImpl;
 import by.gsu.service.NoteService;
 import by.gsu.service.impl.NoteServiceImpl;
-import com.jfoenix.controls.*;
+import by.gsu.util.DialogUtil;
+import com.jfoenix.controls.JFXAlert;
+import com.jfoenix.controls.JFXCheckBox;
+import com.jfoenix.controls.JFXRippler;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -15,14 +18,13 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,6 +32,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.*;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static java.time.Month.*;
 
@@ -43,6 +47,9 @@ public class CalendarController implements Initializable {
     private static final String SELECTED_DATE_CSS = "selected-date";
     private static final String CURRENT_DATE_CSS = "current-date";
     private static final String CHECKED_CSS = "checked";
+
+    private static final String DELETE_DIALOG_TITLE = "Delete selected notes";
+    private static final String DELETE_DIALOG_BODY = "Are you sure you want to delete selected notes?";
 
     @FXML
     private AnchorPane root;
@@ -131,8 +138,7 @@ public class CalendarController implements Initializable {
 
         drawCalenderCells(YearMonth.now());
 
-        List<Note> notes = noteService.getSuitableByDateAndTime(LocalDateTime.now());
-        rebuildNotesPane(notes);
+        rebuildNotesPane(LocalDate.now());
     }
 
     private void rebuildNotesPane(List<Note> notes) {
@@ -150,6 +156,7 @@ public class CalendarController implements Initializable {
         for (int i = 0; i < notes.size(); i++) {
             Note note = notes.get(i);
             JFXCheckBox noteCheckBox = new JFXCheckBox();
+            noteCheckBox.setUserData(note);
             noteCheckBox.setText(note.toString());
             noteCheckBox.getStyleClass().add(CHECKED_CSS);
             noteCheckBox.setTextFill(Paint.valueOf("#212121"));
@@ -209,19 +216,22 @@ public class CalendarController implements Initializable {
             cell.setOnMouseClicked(event -> {
                 unselectAllCells();
                 cellStyles.add(SELECTED_DATE_CSS);
-
-                List<Note> notes;
-                if (LocalDate.now().isEqual(cell.getDate())) {
-                    notes = noteService.getSuitableByDateAndTime(LocalDateTime.now());
-                } else {
-                    notes = noteService.getSuitableByDate(cell.getDate());
-                }
-
-                rebuildNotesPane(notes);
+                rebuildNotesPane(cell.getDate());
             });
 
             firstCellDate = firstCellDate.plusDays(1);
         }
+    }
+
+    private void rebuildNotesPane(LocalDate date) {
+        List<Note> notes;
+        if (LocalDate.now().isEqual(date)) {
+            notes = noteService.getSuitableByDateAndTime(LocalDateTime.now());
+        } else {
+            notes = noteService.getSuitableByDate(date);
+        }
+
+        rebuildNotesPane(notes);
     }
 
     private void unselectAllCells() {
@@ -343,25 +353,36 @@ public class CalendarController implements Initializable {
 
     @FXML
     public void onButtonDeleteSelectedNotesClicked(ActionEvent actionEvent) {
-        JFXAlert alert = new JFXAlert((Stage) root.getScene().getWindow());
-        alert.initModality(Modality.APPLICATION_MODAL);
-        alert.setOverlayClose(false);
+        Stage stage = (Stage) (root.getScene().getWindow());
 
-        JFXButton yesButton = new JFXButton("YES");
-        ObservableList<String> yesButtonStyles = yesButton.getStyleClass();
-        yesButtonStyles.add("raised-green-btn");
-        yesButton.setOnAction(event -> alert.hideWithAnimation());
+        ObservableList<Node> notesPaneChildren = notesPane.getChildren();
+        List<JFXCheckBox> selectedCheckBoxes = notesPaneChildren.stream()
+                .filter(node -> node instanceof JFXCheckBox)
+                .map(JFXCheckBox.class::cast)
+                .filter(CheckBox::isSelected)
+                .collect(Collectors.toList());
 
-        JFXButton noButton = new JFXButton("NO");
-        noButton.getStyleClass().add("raised-red-btn");
-        noButton.setOnAction(event -> alert.hideWithAnimation());
+        if (selectedCheckBoxes.isEmpty()) {
+            JFXAlert<String> warningDialog = DialogUtil
+                    .buildInfoDialog(stage, "Warning", "There are no selected notes to delete");
+            warningDialog.show();
+            return;
+        }
 
-        JFXDialogLayout layout = new JFXDialogLayout();
-        layout.setHeading(new Label("Delete selected notes"));
-        layout.setBody(new Label("Are you sure you want to delete selected notes?"));
-        layout.setActions(yesButton, noButton);
+        List<Note> selectedNotes = selectedCheckBoxes.stream()
+                .map(Node::getUserData)
+                .map(Note.class::cast)
+                .collect(Collectors.toList());
 
-        alert.setContent(layout);
+        JFXAlert<String> alert = DialogUtil
+                .buildYesNoModalDialog(
+                        stage,
+                        DELETE_DIALOG_TITLE,
+                        DELETE_DIALOG_BODY,
+                        () -> {
+                            noteService.delete(selectedNotes);
+                            notesPaneChildren.removeAll(selectedCheckBoxes);
+                        });
         alert.show();
     }
 
@@ -379,14 +400,14 @@ public class CalendarController implements Initializable {
     }
 
     private int getNextYear() {
-        return getYear() + 1;
+        return getSelectedYear() + 1;
     }
 
     private int getPreviousYear() {
-        return getYear() - 1;
+        return getSelectedYear() - 1;
     }
 
-    private int getYear() {
+    private int getSelectedYear() {
         return Integer.parseInt(labelYear.getText());
     }
 
@@ -399,7 +420,7 @@ public class CalendarController implements Initializable {
         activateMonthPane(month);
 
         labelMonth.setText(month.name());
-        changeCalendar(getYear(), month);
+        changeCalendar(getSelectedYear(), month);
     }
 
 }

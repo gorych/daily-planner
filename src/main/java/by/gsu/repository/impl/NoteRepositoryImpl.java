@@ -60,7 +60,15 @@ public class NoteRepositoryImpl implements NoteRepository {
 
     @Override
     public void delete(Note note) {
-        DSL_CONTEXT.delete(NOTE).where(NOTE.ID.eq(note.getId()));
+        DSL_CONTEXT
+                .delete(NOTE)
+                .where(NOTE.ID.eq(note.getId()))
+                .execute();
+    }
+
+    @Override
+    public void delete(List<Note> notes) {
+        notes.forEach(this::delete);
     }
 
     @Override
@@ -80,7 +88,7 @@ public class NoteRepositoryImpl implements NoteRepository {
                 .where(NOTE.STARTDATE.greaterOrEqual(convertToBigDecimal(leftStartDate))
                         .and(NOTE.STARTDATE.lessOrEqual(convertToBigDecimal(rightStartDate)))
                         .and(NOTE.ENDDATE.greaterOrEqual(convertToBigDecimal(leftStartDate)))
-                        )
+                )
                 .fetch()
                 .map(Note::new);
     }
