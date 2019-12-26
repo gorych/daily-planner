@@ -18,10 +18,10 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -50,7 +50,6 @@ public class CalendarController implements Initializable {
     private static final String DELETE_DIALOG_BODY = "Are you sure you want to delete selected notes?";
     private static final String WARNING_DIALOG_TITLE = "Warning";
     private static final String WARNING_DIALOG_BODY = "There are no selected notes to delete";
-    private static final String ADD_NEW_NOTE_DIALOG_TITLE = "Add new note";
 
     @FXML
     private AnchorPane root;
@@ -103,6 +102,7 @@ public class CalendarController implements Initializable {
     @FXML
     private GridPane notesPane;
 
+    private int selectedDay;
     private Month selectedMonth;
     private Map<Month, ImageView> monthPanes;
     private ArrayList<CalendarCellNode> calendarCellNodes;
@@ -130,6 +130,7 @@ public class CalendarController implements Initializable {
         monthPanes.put(NOVEMBER, novemberPane);
         monthPanes.put(DECEMBER, decemberPane);
 
+        selectedDay = LocalDate.now().getDayOfMonth();
         selectedMonth = LocalDate.now().getMonth();
         labelMonth.setText(selectedMonth.toString());
         labelYear.setText(String.valueOf(LocalDate.now().getYear()));
@@ -162,6 +163,11 @@ public class CalendarController implements Initializable {
             noteCheckBox.getStyleClass().add(CHECKED_CSS);
             noteCheckBox.setTextFill(Paint.valueOf("#212121"));
             noteCheckBox.setPadding(new Insets(0, 0, 5, 0));
+
+            Tooltip tooltip = new Tooltip(String.format("[%s-%s] %s", note.getStartDate(), note.getEndDate(), note.getDescription()));
+            tooltip.setFont(new Font(14));
+
+            noteCheckBox.setTooltip(tooltip);
             notesPane.addRow(i + 2, noteCheckBox);
         }
     }
@@ -194,23 +200,23 @@ public class CalendarController implements Initializable {
         int year = yearMonth.getYear();
         int month = yearMonth.getMonthValue();
 
-        LocalDate firstCellDate = getFirstCellDate(year, month);
+        LocalDate cellDate = getFirstCellDate(year, month);
         for (CalendarCellNode cell : calendarCellNodes) {
             ObservableList<Node> cellChildren = cell.getChildren();
             if (!cellChildren.isEmpty()) {
                 cellChildren.clear();
             }
 
-            cell.setDate(firstCellDate);
+            cell.setDate(cellDate);
 
-            Label dateLabel = buildDateLabel(yearMonth, firstCellDate, cell);
+            Label dateLabel = buildDateLabel(yearMonth, cellDate, cell);
             cellChildren.add(dateLabel);
 
             ObservableList<String> cellStyles = cell.getStyleClass();
             cellStyles.remove(SELECTED_DATE_CSS);
             cellStyles.remove(CURRENT_DATE_CSS);
 
-            if (LocalDate.now().equals(cell.getDate())) {
+            if (LocalDate.now().equals(cellDate)) {
                 cellStyles.add(CURRENT_DATE_CSS);
             }
 
@@ -218,9 +224,10 @@ public class CalendarController implements Initializable {
                 unselectAllCells();
                 cellStyles.add(SELECTED_DATE_CSS);
                 rebuildNotesPane(cell.getDate());
+                selectedDay = cell.getDate().getDayOfMonth();
             });
 
-            firstCellDate = firstCellDate.plusDays(1);
+            cellDate = cellDate.plusDays(1);
         }
     }
 
@@ -392,21 +399,14 @@ public class CalendarController implements Initializable {
         Stage stage = (Stage) (root.getScene().getWindow());
 
         FXMLLoader fxmlLoader = new FXMLLoader();
-        StackPane addNoteDialogBody = fxmlLoader.load(getClass().getResource("/layout/add-note-dialog.fxml").openStream());
+        fxmlLoader.load(getClass().getResource("/layout/add-note-dialog.fxml").openStream());
         AddNewNoteDialogController addNoteController = fxmlLoader.getController();
 
-        JFXAlert<String> alert = DialogUtil
-                .buildAddCancelModalDialog(
-                        stage,
-                        ADD_NEW_NOTE_DIALOG_TITLE,
-                        addNoteDialogBody,
-                        () -> {
-                            addNoteController.saveNewNote();
-                            addNoteController.cleanFieldValues();
-                            rebuildNotesPane(LocalDate.of(getSelectedYear(), selectedMonth, selectedMonth.maxLength()));
-                        },
-                        addNoteController::cleanFieldValues);
-        alert.show();
+        addNoteController.openDialog(stage, getSelectedLocalDate(), () -> rebuildNotesPane(getSelectedLocalDate()));
+    }
+
+    private LocalDate getSelectedLocalDate() {
+        return LocalDate.of(getSelectedYear(), selectedMonth, selectedDay);
     }
 
 

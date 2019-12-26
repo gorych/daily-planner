@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 import static by.gsu.domain.tables.Note.NOTE;
-import static by.gsu.util.DateTimeUtil.HH_MM_FORMATTER;
+import static by.gsu.util.DateTimeUtil.DD_MM_HH_MM_FORMATTER;
 import static by.gsu.util.DateTimeUtil.YYYY_MM_DD_HH_MM_FORMATTER;
 
 @Data
@@ -32,8 +32,7 @@ public class Note {
 
     @Override
     public String toString() {
-        return startDate.format(HH_MM_FORMATTER) + "-" +
-                endDate.format(HH_MM_FORMATTER) + " " +
+        return "[" + startDate.format(DD_MM_HH_MM_FORMATTER) + "] " +
                 name;
     }
 

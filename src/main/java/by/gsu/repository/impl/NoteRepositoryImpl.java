@@ -39,9 +39,9 @@ public class NoteRepositoryImpl implements NoteRepository {
     }
 
     @Override
-    public void add(Note note) {
+    public Note add(Note note) {
         NoteRecord noteRecord = DSL_CONTEXT.newRecord(NOTE);
-        saveOrUpdate(note, noteRecord);
+        return saveOrUpdate(note, noteRecord);
     }
 
     @Override
@@ -50,12 +50,13 @@ public class NoteRepositoryImpl implements NoteRepository {
         saveOrUpdate(note, noteRecord);
     }
 
-    private void saveOrUpdate(Note note, NoteRecord noteRecord) {
+    private Note saveOrUpdate(Note note, NoteRecord noteRecord) {
         noteRecord.setName(note.getName());
         noteRecord.setDescription(note.getDescription());
         noteRecord.setStartdate(convertToBigDecimal(note.getStartDate()));
         noteRecord.setEnddate(convertToBigDecimal(note.getEndDate()));
         noteRecord.store();
+        return new Note(noteRecord);
     }
 
     @Override
@@ -85,8 +86,7 @@ public class NoteRepositoryImpl implements NoteRepository {
     public List<Note> findByLeftAndRightStartDates(LocalDateTime leftStartDate, LocalDateTime rightStartDate) {
         return DSL_CONTEXT.select()
                 .from(NOTE)
-                .where(NOTE.STARTDATE.greaterOrEqual(convertToBigDecimal(leftStartDate))
-                        .and(NOTE.STARTDATE.lessOrEqual(convertToBigDecimal(rightStartDate)))
+                .where(NOTE.STARTDATE.lessOrEqual(convertToBigDecimal(rightStartDate))
                         .and(NOTE.ENDDATE.greaterOrEqual(convertToBigDecimal(leftStartDate)))
                 )
                 .fetch()

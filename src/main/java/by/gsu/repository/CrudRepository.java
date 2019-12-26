@@ -1,5 +1,7 @@
 package by.gsu.repository;
 
+import by.gsu.model.Note;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -9,7 +11,7 @@ public interface CrudRepository<T> {
 
     Optional<T> findById(int id);
 
-    void add(T entity);
+    Note add(T entity);
 
     void update(T entity);
 

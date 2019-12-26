@@ -33,8 +33,8 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public void add(Note note) {
-        noteRepository.add(note);
+    public Note add(Note note) {
+        return noteRepository.add(note);
     }
 
     private List<Note> getSortedByStartDate(Supplier<List<Note>> notesSupplier) {

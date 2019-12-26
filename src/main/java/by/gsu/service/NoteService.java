@@ -12,7 +12,7 @@ public interface NoteService {
 
     List<Note> getSuitableByDateAndSortedByStartDate(LocalDate date);
 
-    void add(Note note);
+    Note add(Note note);
 
     void delete(List<Note> notes);
 
