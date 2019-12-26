@@ -8,7 +8,10 @@ import lombok.RequiredArgsConstructor;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.Comparator;
 import java.util.List;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class NoteServiceImpl implements NoteService {
@@ -21,15 +24,23 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public List<Note> getSuitableByDateAndTime(LocalDateTime dateTime) {
-        return noteRepository.findByStartDateLessOrEqualAndEndDateGreaterOrEqual(dateTime);
+    public List<Note> getSuitableByDateAndTimeAndSortedByStartDate(LocalDateTime dateTime) {
+        return getSortedByStartDate(
+                () -> noteRepository.findByStartDateLessOrEqualAndEndDateGreaterOrEqual(dateTime));
     }
 
     @Override
-    public List<Note> getSuitableByDate(LocalDate date) {
+    public List<Note> getSuitableByDateAndSortedByStartDate(LocalDate date) {
         LocalDateTime leftStartDate = LocalDateTime.of(date, LocalTime.of(0, 0));
         LocalDateTime rightStartDate = LocalDateTime.of(date, LocalTime.of(23, 59));
-        return noteRepository.findByLeftAndRightStartDates(leftStartDate, rightStartDate);
+        return getSortedByStartDate(
+                () -> noteRepository.findByLeftAndRightStartDates(leftStartDate, rightStartDate));
+    }
+
+    private List<Note> getSortedByStartDate(Supplier<List<Note>> notesSupplier) {
+        return notesSupplier.get().stream()
+                .sorted(Comparator.comparing(Note::getStartDate))
+                .collect(Collectors.toList());
     }
 
     @Override

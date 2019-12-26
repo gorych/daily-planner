@@ -10,9 +10,9 @@ public interface NoteService {
 
     List<Note> getAll();
 
-    List<Note> getSuitableByDateAndTime(LocalDateTime dateTime);
+    List<Note> getSuitableByDateAndTimeAndSortedByStartDate(LocalDateTime dateTime);
 
-    List<Note> getSuitableByDate(LocalDate date);
+    List<Note> getSuitableByDateAndSortedByStartDate(LocalDate date);
 
     void delete(List<Note> notes);
 

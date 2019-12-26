@@ -33,7 +33,6 @@ import java.net.URL;
 import java.time.*;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static java.time.Month.*;
 
@@ -226,9 +225,9 @@ public class CalendarController implements Initializable {
     private void rebuildNotesPane(LocalDate date) {
         List<Note> notes;
         if (LocalDate.now().isEqual(date)) {
-            notes = noteService.getSuitableByDateAndTime(LocalDateTime.now());
+            notes = noteService.getSuitableByDateAndTimeAndSortedByStartDate(LocalDateTime.now());
         } else {
-            notes = noteService.getSuitableByDate(date);
+            notes = noteService.getSuitableByDateAndSortedByStartDate(date);
         }
 
         rebuildNotesPane(notes);
