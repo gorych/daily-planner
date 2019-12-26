@@ -164,7 +164,8 @@ public class CalendarController implements Initializable {
             noteCheckBox.setTextFill(Paint.valueOf("#212121"));
             noteCheckBox.setPadding(new Insets(0, 0, 5, 0));
 
-            Tooltip tooltip = new Tooltip(String.format("[%s-%s] %s", note.getStartDate(), note.getEndDate(), note.getDescription()));
+            Tooltip tooltip = new Tooltip(
+                    String.format("[%s-%s] %s", note.getStartDateFormatted(), note.getEndDateFormatted(), note.getDescription()));
             tooltip.setFont(new Font(14));
 
             noteCheckBox.setTooltip(tooltip);

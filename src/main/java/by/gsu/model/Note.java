@@ -9,8 +9,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 import static by.gsu.domain.tables.Note.NOTE;
-import static by.gsu.util.DateTimeUtil.DD_MM_HH_MM_FORMATTER;
-import static by.gsu.util.DateTimeUtil.YYYY_MM_DD_HH_MM_FORMATTER;
+import static by.gsu.util.DateTimeUtil.*;
 
 @Data
 @NoArgsConstructor
@@ -28,6 +27,14 @@ public class Note {
         this.description = record.get(NOTE.DESCRIPTION);
         this.startDate = LocalDateTime.parse(record.get(NOTE.STARTDATE, String.class), YYYY_MM_DD_HH_MM_FORMATTER);
         this.endDate = LocalDateTime.parse(record.get(NOTE.ENDDATE, String.class), YYYY_MM_DD_HH_MM_FORMATTER);
+    }
+
+    public String getStartDateFormatted() {
+        return startDate.format(DD_MM_YYYY_HH_MM_FORMATTER);
+    }
+
+    public String getEndDateFormatted() {
+        return endDate.format(DD_MM_YYYY_HH_MM_FORMATTER);
     }
 
     @Override
