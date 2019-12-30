@@ -60,9 +60,8 @@ public class AddNewNoteDialogController implements Initializable {
 
     public void openDialog(Stage stage, LocalDate startDateFieldValue, Runnable closeAction) {
         this.noteStartDate.setValue(startDateFieldValue);
-        LocalDate endLocalDate = startDateFieldValue.plusDays(1);
-        this.noteEndDate.setValue(endLocalDate);
-        this.noteEndTime.setValue(LocalTime.now());
+        this.noteEndDate.setValue(startDateFieldValue);
+        this.noteEndTime.setValue(LocalTime.of(23,59));
 
         JFXAlert<String> alert = DialogUtil
                 .buildAddCancelModalDialog(

@@ -19,17 +19,11 @@ public class NoteServiceImpl implements NoteService {
     private final NoteRepository noteRepository;
 
     @Override
-    public List<Note> getSuitableByDateAndTimeAndSortedByStartDate(LocalDateTime dateTime) {
+    public List<Note> getSuitableForTodayAndSortedByStartDate(LocalDate date) {
+        LocalDateTime minDateTime = LocalDateTime.of(date, LocalTime.of(0, 0));
+        LocalDateTime maxDateTime = LocalDateTime.of(date, LocalTime.of(23, 59));
         return getSortedByStartDate(
-                () -> noteRepository.findByStartDateLessOrEqualAndEndDateGreaterOrEqual(dateTime));
-    }
-
-    @Override
-    public List<Note> getSuitableByDateAndSortedByStartDate(LocalDate date) {
-        LocalDateTime leftStartDate = LocalDateTime.of(date, LocalTime.of(0, 0));
-        LocalDateTime rightStartDate = LocalDateTime.of(date, LocalTime.of(23, 59));
-        return getSortedByStartDate(
-                () -> noteRepository.findByLeftAndRightStartDates(leftStartDate, rightStartDate));
+                () -> noteRepository.findSuitableNotesByMinAndMaxDateTime(minDateTime, maxDateTime));
     }
 
     @Override

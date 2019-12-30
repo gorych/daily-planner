@@ -8,8 +8,6 @@ import java.util.List;
 
 public interface NoteRepository extends CrudRepository<Note> {
 
-    List<Note> findByStartDateLessOrEqualAndEndDateGreaterOrEqual(LocalDateTime date);
-
-    List<Note> findByLeftAndRightStartDates(LocalDateTime startDateLeft, LocalDateTime startDateRight);
+    List<Note> findSuitableNotesByMinAndMaxDateTime(LocalDateTime minDateTime, LocalDateTime maxDateTime);
 
 }

@@ -29,7 +29,10 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.net.URL;
-import java.time.*;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.YearMonth;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -233,13 +236,7 @@ public class CalendarController implements Initializable {
     }
 
     private void rebuildNotesPane(LocalDate date) {
-        List<Note> notes;
-        if (LocalDate.now().isEqual(date)) {
-            notes = noteService.getSuitableByDateAndTimeAndSortedByStartDate(LocalDateTime.now());
-        } else {
-            notes = noteService.getSuitableByDateAndSortedByStartDate(date);
-        }
-
+        List<Note> notes = noteService.getSuitableForTodayAndSortedByStartDate(date);
         rebuildNotesPane(notes);
     }
 

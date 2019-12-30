@@ -8,6 +8,7 @@ import org.jooq.DSLContext;
 import org.jooq.SQLDialect;
 import org.jooq.impl.DSL;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -73,21 +74,16 @@ public class NoteRepositoryImpl implements NoteRepository {
     }
 
     @Override
-    public List<Note> findByStartDateLessOrEqualAndEndDateGreaterOrEqual(LocalDateTime date) {
+    public List<Note> findSuitableNotesByMinAndMaxDateTime(LocalDateTime minDateTime, LocalDateTime maxDateTime) {
+        BigDecimal min = convertToBigDecimal(minDateTime);
+        BigDecimal max = convertToBigDecimal(maxDateTime);
         return DSL_CONTEXT.select()
                 .from(NOTE)
-                .where(NOTE.STARTDATE.lessOrEqual(convertToBigDecimal(date))
-                        .and(NOTE.ENDDATE.greaterOrEqual(convertToBigDecimal(date))))
-                .fetch()
-                .map(Note::new);
-    }
-
-    @Override
-    public List<Note> findByLeftAndRightStartDates(LocalDateTime leftStartDate, LocalDateTime rightStartDate) {
-        return DSL_CONTEXT.select()
-                .from(NOTE)
-                .where(NOTE.STARTDATE.lessOrEqual(convertToBigDecimal(rightStartDate))
-                        .and(NOTE.ENDDATE.greaterOrEqual(convertToBigDecimal(leftStartDate)))
+                .where(
+                        (NOTE.STARTDATE.between(min, max).and(NOTE.ENDDATE.between(min, max)))
+                        .or(NOTE.STARTDATE.between(min, max).and(NOTE.ENDDATE.greaterOrEqual(max)))
+                        .or(NOTE.ENDDATE.between(min, max).and(NOTE.STARTDATE.lessOrEqual(min)))
+                        .or(NOTE.STARTDATE.le(min).and(NOTE.ENDDATE.ge(max)))
                 )
                 .fetch()
                 .map(Note::new);
